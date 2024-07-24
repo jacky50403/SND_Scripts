@@ -110,7 +110,7 @@
 ]]--
 
 ---Food Settings
-food_to_eat = false 						            --Name of the food you want to use, in quotes (ie. "[Name of food]"), or
+food_to_eat = "キャロットラペ <hq>" 						            --Name of the food you want to use, in quotes (ie. "[Name of food]"), or
                                                         --Table of names of the foods you want to use (ie. {"[Name of food 1]", "[Name of food 2]"}), or
                                                         --Set false otherwise.
                                                         --Include <hq> if high quality. (i.e. "[Name of food] <hq>") DOES NOT CHECK ITEM COUNT YET
@@ -134,7 +134,7 @@ do_reduce   = true                                      --If true, will perform 
 reduce_gp_threshold = 250								--Will prefer reducing if gp is lower than that value to optimize low-gp time
 reduce_free_slot = 5									--Inventory slots left before forcing aetherial reduction
 
-do_retainers = true										--true enables Auto Retainer logic when a retainer is ready. Requires Auto Retainer plugin
+do_retainers = false										--true enables Auto Retainer logic when a retainer is ready. Requires Auto Retainer plugin
 summoning_bell_name = "Summoning Bell"					--Change this to the summonning bell name when playing in another language	
 
 ---Gathering logic Settings
@@ -407,7 +407,7 @@ function HasReducibles()
 	end
 	
 	while not IsAddonVisible("PurifyItemSelector") and not IsAddonReady("PurifyItemSelector") do
-		yield('/gaction "Aetherial Reduction"')
+		yield('/gaction "精選"')
 		local timeout_start = os.clock()
 		repeat
 			yield("/wait "..interval_rate)
@@ -416,7 +416,7 @@ function HasReducibles()
 	yield("/wait "..interval_rate)
 	local visible = IsNodeVisible("PurifyItemSelector", 1, 7) and not IsNodeVisible("PurifyItemSelector", 1, 6)
 	while IsAddonVisible("PurifyItemSelector") do
-		yield('/gaction "Aetherial Reduction"')
+		yield('/gaction "精選"')
 		repeat
 			yield("/wait "..interval_rate)
 		until IsPlayerAvailable()
@@ -459,7 +459,7 @@ function RepairExtractReduceCheck()
 					Dismount()
 				end
 				
-                yield('/gaction "Repair"')
+                yield('/gaction "修理"')
                 repeat				
 					if not CanCharacterDoActions() then return end
 					
@@ -477,7 +477,7 @@ function RepairExtractReduceCheck()
             until not IsAddonVisible("SelectYesno")
             while GetCharacterCondition(39) do yield("/wait "..interval_rate) end
             while IsAddonVisible("Repair") do
-                yield('/gaction "Repair"')
+                yield('/gaction "修理"')
                 repeat
                     yield("/wait "..interval_rate)
                 until IsPlayerAvailable()
@@ -512,7 +512,7 @@ function RepairExtractReduceCheck()
         Print("Attempting to extract materia...")
         while CanCharacterDoActions() and not IsAddonVisible("Materialize") and not IsAddonReady("Materialize") do
 			
-			yield('/gaction "Materia Extraction"')
+			yield('/gaction "マテリア精製"')
 			repeat
 				yield("/wait "..interval_rate)
 			until IsPlayerAvailable()
@@ -532,7 +532,7 @@ function RepairExtractReduceCheck()
             until not GetCharacterCondition(39)
         end
         while CanCharacterDoActions() and IsAddonVisible("Materialize") do
-            yield('/gaction "Materia Extraction"')
+            yield('/gaction "マテリア精製"')
             repeat
                 yield("/wait "..interval_rate)
             until IsPlayerAvailable()
@@ -564,7 +564,7 @@ function RepairExtractReduceCheck()
         repeat --Show reduction window
 			if not CanCharacterDoActions() then return end
 			
-            yield('/gaction "Aetherial Reduction"')
+            yield('/gaction "精選"')
             local timeout_start = os.clock()
             repeat
                 yield("/wait "..interval_rate)
@@ -583,12 +583,12 @@ function RepairExtractReduceCheck()
             until not GetCharacterCondition(39)
 			
 			if (stop_main) then 
-				yield('/gaction "Aetherial Reduction"')
+				yield('/gaction "精選"')
 				return 
 			end
         end
         while IsAddonVisible("PurifyItemSelector") do --Hide reduction window
-            yield('/gaction "Aetherial Reduction"')
+            yield('/gaction "精選"')
             repeat
                 yield("/wait "..interval_rate)
             until IsPlayerAvailable()		
@@ -618,7 +618,7 @@ function EatFood()
     if type(food_to_eat) ~= "string" and type(food_to_eat) ~= "table" then return end
     if GetZoneID() == 1055 then return end
     
-    if not HasStatus("Well Fed") then
+    if not HasStatus("食事") then
         local timeout_start = os.clock()
         local user_settings = {GetSNDProperty("UseItemStructsVersion"), GetSNDProperty("StopMacroIfItemNotFound"), GetSNDProperty("StopMacroIfCantUseItem")}
         SetSNDProperty("UseItemStructsVersion", "true")
@@ -866,7 +866,7 @@ function Dismount()
             end
         until not PathIsRunning()
 
-        yield('/gaction "Mount Roulette"')
+        yield('/gaction "マウント・ルーレット"')
 
         timeout_start = os.clock()
         repeat
@@ -880,7 +880,7 @@ function Dismount()
         until not GetCharacterCondition(77)
     end
     if GetCharacterCondition(4) then
-        yield('/gaction "Mount Roulette"')
+        yield('/gaction "マウント・ルーレット"')
         repeat
             yield("/wait "..interval_rate)
         until not GetCharacterCondition(4)
